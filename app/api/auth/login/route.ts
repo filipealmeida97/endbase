@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     }
 
     // salva tokens de forma segura (HttpOnly cookie)
-    setAuthCookies(data.access, data.refresh);
+    await setAuthCookies(data.access, data.refresh);
 
     return NextResponse.json({ ok: true });
   } catch (e) {

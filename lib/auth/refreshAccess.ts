@@ -1,7 +1,7 @@
 import { getRefreshToken, setAuthCookies } from "@/lib/auth/cookies";
 
 export async function refreshAccessToken() {
-  const refresh = getRefreshToken();
+  const refresh = await getRefreshToken();
   if (!refresh) return null;
 
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -18,6 +18,6 @@ export async function refreshAccessToken() {
   const data = await res.json();
   if (!data?.access) return null;
 
-  setAuthCookies(data.access, refresh);
+  await setAuthCookies(data.access, refresh);
   return data.access as string;
 }

@@ -16,7 +16,7 @@ async function fetchAtivos(access: string) {
 
 export async function GET() {
   try {
-    let access = getAccessToken();
+    let access = await getAccessToken();
 
     if (!access) {
       return NextResponse.json({ detail: "Não autenticado" }, { status: 401 });
@@ -29,7 +29,6 @@ export async function GET() {
       if (!newAccess) {
         return NextResponse.json({ detail: "Sessão expirada" }, { status: 401 });
       }
-
       access = newAccess;
       res = await fetchAtivos(access);
     }

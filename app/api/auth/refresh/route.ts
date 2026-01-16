@@ -3,7 +3,7 @@ import { getRefreshToken, setAuthCookies } from "@/lib/auth/cookies";
 
 export async function POST() {
   try {
-    const refresh = getRefreshToken();
+    const refresh = await getRefreshToken();
 
     if (!refresh) {
       return NextResponse.json({ detail: "Sem refresh token" }, { status: 401 });
@@ -15,26 +15,16 @@ export async function POST() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refresh }),
+      cache: "no-store",
     });
 
     if (!res.ok) {
-      return NextResponse.json(
-        { detail: "Refresh inválido/expirado" },
-        { status: 401 }
-      );
+      return NextResponse.json({ detail: "Refresh inválido/expirado" }, { status: 401 });
     }
 
     const data = await res.json();
 
-    if (!data?.access) {
-      return NextResponse.json(
-        { detail: "Resposta inesperada do servidor" },
-        { status: 500 }
-      );
-    }
-
-    // mantém o refresh antigo, troca só o access
-    setAuthCookies(data.access, refresh);
+    await setAuthCookies(data.access, refresh);
 
     return NextResponse.json({ ok: true });
   } catch {

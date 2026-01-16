@@ -5,18 +5,16 @@ const REFRESH_COOKIE = "refresh_token";
 
 const isProd = process.env.NODE_ENV === "production";
 
-export function setAuthCookies(access: string, refresh: string) {
-  const store = cookies();
+export async function setAuthCookies(access: string, refresh: string) {
+  const store = await cookies();
 
-  // Access token: vida curta
   store.set(ACCESS_COOKIE, access, {
     httpOnly: true,
-    secure: isProd, // true em produção (https)
+    secure: isProd,
     sameSite: "lax",
     path: "/",
   });
 
-  // Refresh token: vida longa
   store.set(REFRESH_COOKIE, refresh, {
     httpOnly: true,
     secure: isProd,
@@ -25,16 +23,18 @@ export function setAuthCookies(access: string, refresh: string) {
   });
 }
 
-export function clearAuthCookies() {
-  const store = cookies();
+export async function clearAuthCookies() {
+  const store = await cookies();
   store.set(ACCESS_COOKIE, "", { path: "/", maxAge: 0 });
   store.set(REFRESH_COOKIE, "", { path: "/", maxAge: 0 });
 }
 
-export function getAccessToken() {
-  return cookies().get(ACCESS_COOKIE)?.value ?? null;
+export async function getAccessToken() {
+  const store = await cookies();
+  return store.get(ACCESS_COOKIE)?.value ?? null;
 }
 
-export function getRefreshToken() {
-  return cookies().get(REFRESH_COOKIE)?.value ?? null;
+export async function getRefreshToken() {
+  const store = await cookies();
+  return store.get(REFRESH_COOKIE)?.value ?? null;
 }
