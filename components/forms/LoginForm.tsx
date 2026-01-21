@@ -88,7 +88,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
 
           <div className="space-y-2">
             <Label htmlFor="email">E-mail</Label>
-            <Input id="email" {...form.register("email")} />
+            <Input id="email" {...form.register("email")} autoCapitalize="none" />
             {form.formState.errors.email && (
               <p className="text-sm text-red-500">
                 {form.formState.errors.email.message}
