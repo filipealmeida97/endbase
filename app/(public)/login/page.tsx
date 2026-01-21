@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/forms/LoginForm";
-import {Galaxy} from "@/components/animation";
+import {Galaxy, Beams} from "@/components/animation";
 import Image from "next/image";
 
 export default function LoginPage() {
@@ -8,18 +8,15 @@ export default function LoginPage() {
         {/* Background Beams full screen */}
         <div className="absolute inset-0 bg-black">
             <div className="h-full w-full opacity-100">
-                <Galaxy
-                    starSpeed={0.5}
-                    density={1}
-                    hueShift={140}
-                    speed={1}
-                    glowIntensity={0.3}
-                    saturation={0}
-                    mouseRepulsion
-                    repulsionStrength={2}
-                    twinkleIntensity={0.3}
-                    rotationSpeed={0.1}
-                    transparent
+                <Beams
+                    beamWidth={2}
+                    beamHeight={15}
+                    beamNumber={12}
+                    lightColor="#97a7f7"
+                    speed={2}
+                    noiseIntensity={1.75}
+                    scale={0.2}
+                    rotation={0}
                 />
             </div>
 

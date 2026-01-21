@@ -1,6 +1,9 @@
+//app/(private)/home.tsx
 "use client";
 
 import { useState } from "react";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { TextPressure } from "@/components/animation";
 
 export default function HomePage() {
   const [ativos, setAtivos] = useState<any>(null);
@@ -33,16 +36,20 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen p-6 bg-zinc-950 text-white">
-      <div className="max-w-3xl space-y-4">
-        <h1 className="text-2xl font-semibold">Home</h1>
+      <div className="max-w-sm mx-auto space-y-4 text-center">
+        <TextPressure text="Home!" />
 
-        <button
-          onClick={handleLoadAtivos}
-          className="px-4 py-2 rounded bg-white/10 hover:bg-white/20 transition"
-          disabled={loading}
-        >
-          {loading ? "Carregando..." : "Ativos"}
-        </button>
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <LogoutButton />
+
+          <button
+            onClick={handleLoadAtivos}
+            className="px-4 py-2 rounded bg-white/10 hover:bg-white/20 transition"
+            disabled={loading}
+          >
+            {loading ? "Carregando..." : "Ativos"}
+          </button>
+        </div>
 
         {error && (
           <div className="p-3 rounded bg-red-500/20 border border-red-500/40">
@@ -51,7 +58,7 @@ export default function HomePage() {
         )}
 
         {ativos && (
-          <pre className="p-4 rounded bg-black/40 border border-white/10 overflow-auto text-xs">
+          <pre className="p-4 rounded bg-black/40 border border-white/10 overflow-auto text-xs text-left">
             {JSON.stringify(ativos, null, 2)}
           </pre>
         )}

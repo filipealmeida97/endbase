@@ -4,25 +4,23 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/home")) {
-    const access = request.cookies.get("access_token")?.value;
-    const refresh = request.cookies.get("refresh_token")?.value;
+  const access = request.cookies.get("access_token")?.value;
+  const refresh = request.cookies.get("refresh_token")?.value;
+  const isAuthed = Boolean(access || refresh);
 
-    // se não tem nenhum dos dois -> login
-    if (!access && !refresh) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+  // ✅ se tentar acessar /home sem token -> /login
+  if (pathname.startsWith("/home") && !isAuthed) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-  if (pathname === "/login") {
-    const access = request.cookies.get("access_token")?.value;
-    if (access) {
-      return NextResponse.redirect(new URL("/home", request.url));
-    }
+
+  // ✅ se tentar acessar /login já autenticado -> /home
+  if (pathname.startsWith("/login") && isAuthed) {
+    return NextResponse.redirect(new URL("/home", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/home/:path*"],
+  matcher: ["/home/:path*", "/login/:path*"],
 };
