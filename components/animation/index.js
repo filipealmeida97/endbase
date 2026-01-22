@@ -4,3 +4,4 @@ export { default as Silk } from "./Silk";
 export { default as ShinyText } from "./ShinyText";
 export { default as TextPressure } from "./TextPressure";
 export { default as FuzzyText } from "./FuzzyText";
+export { default as StarBorder } from "./StarBorder";

@@ -1,6 +1,7 @@
 import { LoginForm } from "@/components/forms/LoginForm";
 import {Galaxy, Beams} from "@/components/animation";
 import Image from "next/image";
+import { StarBorder } from "@/components/animation";
 
 export default function LoginPage() {
   return (
