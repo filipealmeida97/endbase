@@ -1,43 +1,75 @@
 // src/components/wizard/steps/StepAccount.tsx
 "use client";
 
-import React from "react";
+import { z } from "zod";
+import type { WizardStepRenderProps } from "@/components/Wizard/wizard.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import type { WizardStepProps } from "../wizard.types";
 
-export interface WizardData {
-  name: string;
+const accountSchema = z.object({
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(6, "Senha precisa ter no mínimo 6 caracteres"),
+});
+
+export type AccountStepData = z.infer<typeof accountSchema>;
+
+export interface WizardAllData extends Record<string, unknown> {
   email: string;
+  password: string;
 
-  street: string;
-  number: string;
+  name: string;
+  document: string;
 }
 
-export function StepAccount(props: WizardStepProps<WizardData>) {
-  const { data, updateData } = props;
+export function StepAccount(
+  props: WizardStepRenderProps<WizardAllData, AccountStepData>
+) {
+  const { onNext, defaultValues } = props;
+
+  const form = useForm<AccountStepData>({
+    resolver: zodResolver(accountSchema),
+    defaultValues: {
+      email: defaultValues.email ?? "",
+      password: defaultValues.password ?? "",
+    },
+  });
+
+  function submit(data: AccountStepData) {
+    onNext(data);
+  }
 
   return (
-    <div className="space-y-4">
+    <form onSubmit={form.handleSubmit(submit)} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="name">Nome</Label>
+        <label className="text-sm font-medium">E-mail</label>
         <Input
-          id="name"
-          value={(data.name as string) ?? ""}
-          onChange={(e) => updateData({ name: e.target.value })}
-          placeholder="Seu nome"
+          placeholder="seuemail@email.com"
+          {...form.register("email")}
         />
+        {form.formState.errors.email?.message && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.email.message}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="email">E-mail</Label>
+        <label className="text-sm font-medium">Senha</label>
         <Input
-          id="email"
-          value={(data.email as string) ?? ""}
-          onChange={(e) => updateData({ email: e.target.value })}
-          placeholder="seuemail@email.com"
+          type="password"
+          placeholder="••••••"
+          {...form.register("password")}
         />
+        {form.formState.errors.password?.message && (
+          <p className="text-sm text-destructive">
+            {form.formState.errors.password.message}
+          </p>
+        )}
       </div>
-    </div>
+
+    </form>
   );
 }

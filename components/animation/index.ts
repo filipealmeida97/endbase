@@ -5,3 +5,5 @@ export { default as ShinyText } from "./ShinyText";
 export { default as TextPressure } from "./TextPressure";
 export { default as FuzzyText } from "./FuzzyText";
 export { default as StarBorder } from "./StarBorder";
+export { default as Particles } from "./Particles";
+export { default as PixelCard } from "./PixelCard";
