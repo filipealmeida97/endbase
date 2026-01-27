@@ -1,38 +1,38 @@
+// src/stores/wizard.store.ts
+"use client";
+
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import type { WizardData } from "@/schemas/wizard.schemas";
 
-type WizardStore = {
-  step: number;
-  data: Partial<WizardData>;
+export interface WizardStore<TData extends object> {
+  stepIndex: number;
+  data: Partial<TData>;
 
-  setStep: (step: number) => void;
+  setStepIndex: (index: number) => void;
   nextStep: () => void;
   prevStep: () => void;
 
-  setData: (payload: Partial<WizardData>) => void;
+  updateData: (payload: Partial<TData>) => void;
   reset: () => void;
-};
+}
 
-export const useWizardStore = create<WizardStore>()(
-  persist(
-    (set) => ({
-      step: 0,
-      data: {},
+export function createWizardStore<TData extends object>() {
+  return create<WizardStore<TData>>((set) => ({
+    stepIndex: 0,
+    data: {},
 
-      setStep: (step) => set({ step }),
-      nextStep: () => set((s) => ({ step: s.step + 1 })),
-      prevStep: () => set((s) => ({ step: Math.max(0, s.step - 1) })),
+    setStepIndex: (index) => set(() => ({ stepIndex: index })),
+    nextStep: () => set((state) => ({ stepIndex: state.stepIndex + 1 })),
+    prevStep: () =>
+      set((state) => ({ stepIndex: Math.max(state.stepIndex - 1, 0) })),
 
-      setData: (payload) =>
-        set((s) => ({
-          data: { ...s.data, ...payload },
-        })),
+    updateData: (payload) =>
+      set((state) => ({
+        data: {
+          ...state.data,
+          ...payload,
+        },
+      })),
 
-      reset: () => set({ step: 0, data: {} }),
-    }),
-    {
-      name: "wizard-storage",
-    }
-  )
-);
+    reset: () => set(() => ({ stepIndex: 0, data: {} })),
+  }));
+}

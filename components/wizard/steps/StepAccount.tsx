@@ -1,73 +1,43 @@
+// src/components/wizard/steps/StepAccount.tsx
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { stepAccountSchema } from "@/schemas/wizard.schemas";
-import type { z } from "zod";
-import { useWizardStore } from "@/stores/wizard.store";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { WizardStepProps } from "../wizard.types";
 
-type StepAccountForm = z.infer<typeof stepAccountSchema>;
+export interface WizardData {
+  name: string;
+  email: string;
 
-export function StepAccount() {
-  const { data, setData, nextStep } = useWizardStore();
+  street: string;
+  number: string;
+}
 
-  const form = useForm<StepAccountForm>({
-    resolver: zodResolver(stepAccountSchema),
-    defaultValues: {
-      email: data.email ?? "",
-      password: data.password ?? "",
-    },
-    mode: "onSubmit",
-  });
-
-  const onSubmit = (values: StepAccountForm) => {
-    setData(values);
-    nextStep();
-  };
+export function StepAccount(props: WizardStepProps<WizardData>) {
+  const { data, updateData } = props;
 
   return (
-    <Card className="w-full max-w-xl">
-      <CardHeader>
-        <CardTitle>Conta</CardTitle>
-      </CardHeader>
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="name">Nome</Label>
+        <Input
+          id="name"
+          value={(data.name as string) ?? ""}
+          onChange={(e) => updateData({ name: e.target.value })}
+          placeholder="Seu nome"
+        />
+      </div>
 
-      <CardContent>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">E-mail</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seuemail@dominio.com"
-              {...form.register("email")}
-            />
-            {form.formState.errors.email && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
-            <Input id="password" type="password" {...form.register("password")} />
-            {form.formState.errors.password && (
-              <p className="text-sm text-red-500">
-                {form.formState.errors.password.message}
-              </p>
-            )}
-          </div>
-
-          <div className="flex justify-end">
-            <Button type="submit">Próximo</Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+      <div className="space-y-2">
+        <Label htmlFor="email">E-mail</Label>
+        <Input
+          id="email"
+          value={(data.email as string) ?? ""}
+          onChange={(e) => updateData({ email: e.target.value })}
+          placeholder="seuemail@email.com"
+        />
+      </div>
+    </div>
   );
 }
